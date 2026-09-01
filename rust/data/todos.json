@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "title": "API em Rust rodando.",
+    "completed": true
+  },
+  {
+    "id": 2,
+    "title": "Criar a API com Axum e Rust",
+    "completed": true
+  },
+  {
+    "id": 3,
+    "title": "Publicar a API finalizada.",
+    "completed": false
+  }
+]

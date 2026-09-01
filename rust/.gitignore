@@ -1,0 +1,9 @@
+# Build
+/target/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db

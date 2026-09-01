@@ -1,0 +1,4 @@
+# Redireciona o diretório de build para evitar problemas do linker mingw
+# com caracteres Unicode no caminho do usuário (ex: 'ú' em Usuário).
+[build]
+target-dir = "C:/dev/api-rust-target"
