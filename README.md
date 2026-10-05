@@ -11,5 +11,6 @@ Este repositório agrupa os projetos criados durante o estudo prático dos diver
 * **Clojure**
   * *(Outros projetos - Futuro)*
   
-* **TypeScript**
-  * *(Outros projetos - Futuro)*
+* **[TypeScript (API POO)](./typescript/README.md)**
+  * A mesma Todo List, agora com classes, encapsulamento, herança e polimorfismo. Servidor HTTP nativo do Node, sem framework web.
+  * **[👉 Clique aqui para ver como rodar a API de TypeScript e a sua documentação](./typescript/README.md)**.
