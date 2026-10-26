@@ -2,7 +2,7 @@
 
 API REST de tarefas feita para mostrar orientação a objetos em TypeScript. Não usa framework web: o servidor é o `node:http`, no mesmo papel do `HttpServer` do JDK. O estado da tarefa fica no objeto `Todo`. Quem muda esse estado é um método da própria classe.
 
-A lista vive na memória, dentro de `TodoService`. Ao reiniciar o processo, ela volta vazia.
+As tarefas são gravadas em `data/todos.json`, como nas versões em Rust e Clojure. O `TodoService` mantém a lista em memória e, a cada criação, alternância ou remoção, pede a um `RepositorioTodos` que salve. Ao reiniciar, o estado volta do arquivo. O `data/todos.json` já vem com 3 tarefas de demonstração (seed).
 
 ## Como executar
 
@@ -44,6 +44,12 @@ npm test
 
 ## Endpoints
 
+### `GET /health`
+
+Checagem do servidor.
+
+- **200:** `{ "status": "ok", "paradigm": "poo" }`
+
 ### `GET /todos`
 
 Lista as tarefas. Se não houver nenhuma, devolve `[]`.
@@ -56,11 +62,11 @@ Cria uma tarefa.
 - **201:** a tarefa criada, com `completed: false`
 - **400:** JSON inválido, campo `title` ausente, `title` que não é texto, ou título em branco
 
-### `PATCH /todos/:id/complete`
+### `PATCH /todos/:id/toggle`
 
-Localiza a tarefa e chama `complete()` no objeto. A chamada marca `completed` como `true`. Repetir a chamada mantém `true`.
+Localiza a tarefa e chama `toggle()` no objeto, que inverte `completed`: pendente vira concluída e concluída volta a pendente. É o mesmo contrato das APIs em Rust e Clojure, então o mesmo frontend funciona com as três.
 
-- **200:** a tarefa concluída
+- **200:** a tarefa com `completed` já invertido
 - **404:** id inexistente
 
 ### `DELETE /todos/:id`
@@ -76,7 +82,7 @@ Remove a tarefa.
 
 ### Encapsulamento — `src/Todo.ts`
 
-`id`, `title` e `completed` são `private`. O estado só muda por método da classe. `complete()` é quem liga `completed`.
+`id`, `title` e `completed` são `private`. O estado só muda por método da classe. `complete()` liga `completed` e `toggle()` o inverte.
 
 ### Herança — `src/TodoNotFoundException.ts` e `src/InvalidTitleException.ts`
 
@@ -88,14 +94,24 @@ As duas estendem `Error` e reaproveitam mensagem e `throw`/`catch`. O servidor t
 
 - `ManipuladorListarTodos`
 - `ManipuladorCriarTodo`
-- `ManipuladorConcluirTodo`
+- `ManipuladorAlternarTodo`
 - `ManipuladorRemoverTodo`
 
 O servidor percorre a lista e chama `tratar()` de quem corresponder ao método e ao caminho. A interface é a mesma. O comportamento de cada classe é outro.
 
+### Abstração e injeção de dependência — `src/RepositorioTodos.ts`
+
+`TodoService` depende da interface `RepositorioTodos` (`carregar()` e `salvar()`), não de um arquivo. Quem escolhe a implementação é quem cria o serviço:
+
+- `RepositorioArquivoJson` grava em `data/todos.json`. É o que `Main.ts` usa.
+- `RepositorioMemoria` não persiste nada. É o padrão quando o serviço é criado sem argumento, e é o que os testes de serviço e de API usam.
+
+Trocar o destino dos dados (por exemplo, para um banco) é criar outra classe que implemente a interface, sem mexer no `TodoService`.
+
 ### Fluxo do PATCH
 
-1. `ApiServer` escolhe `ManipuladorConcluirTodo`.
-2. O manipulador pede `TodoService.complete(id)`.
+1. `ApiServer` escolhe `ManipuladorAlternarTodo`.
+2. O manipulador pede `TodoService.toggle(id)`.
 3. O serviço acha o objeto com `findById(id)`.
-4. O objeto executa `todo.complete()`.
+4. O objeto executa `todo.toggle()`, e só ele altera o próprio `completed`.
+5. O serviço pede ao repositório que salve a lista.

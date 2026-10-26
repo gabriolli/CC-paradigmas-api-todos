@@ -4,7 +4,7 @@ import type { ManipuladorHttp, ParametrosRota } from "../ManipuladorHttp.js";
 import { RespostaHttp } from "../RespostaHttp.js";
 import type { TodoService } from "../TodoService.js";
 
-export class ManipuladorConcluirTodo implements ManipuladorHttp {
+export class ManipuladorAlternarTodo implements ManipuladorHttp {
   constructor(private readonly servico: TodoService) {}
 
   corresponde(metodo: string, caminho: string): ParametrosRota | null {
@@ -12,7 +12,7 @@ export class ManipuladorConcluirTodo implements ManipuladorHttp {
       return null;
     }
 
-    const encontrado = caminho.match(/^\/todos\/(\d+)\/complete$/);
+    const encontrado = caminho.match(/^\/todos\/(\d+)\/toggle$/);
     if (encontrado === null) {
       return null;
     }
@@ -25,7 +25,7 @@ export class ManipuladorConcluirTodo implements ManipuladorHttp {
     resposta: ServerResponse,
     parametros: ParametrosRota,
   ): Promise<void> {
-    const todo = this.servico.complete(parametros.id ?? 0);
+    const todo = this.servico.toggle(parametros.id ?? 0);
     RespostaHttp.json(resposta, 200, todo);
   }
 }

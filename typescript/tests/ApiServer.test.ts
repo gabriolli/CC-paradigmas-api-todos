@@ -18,7 +18,13 @@ describe("ApiServer", () => {
     await servidor.encerrar();
   });
 
-  it("cria, lista, conclui e remove uma tarefa", async () => {
+  it("GET /health responde 200 com status ok", async () => {
+    const resposta = await fetch(`${base}/health`);
+    assert.equal(resposta.status, 200);
+    assert.deepEqual(await resposta.json(), { status: "ok", paradigm: "poo" });
+  });
+
+  it("cria, lista, alterna e remove uma tarefa", async () => {
     const criada = await fetch(`${base}/todos`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -37,12 +43,13 @@ describe("ApiServer", () => {
       { id: 1, title: "Preparar apresentação", completed: false },
     ]);
 
-    const patch = await fetch(`${base}/todos/1/complete`, { method: "PATCH" });
+    const patch = await fetch(`${base}/todos/1/toggle`, { method: "PATCH" });
     assert.equal(patch.status, 200);
     assert.equal((await patch.json()).completed, true);
 
-    const deNovo = await fetch(`${base}/todos/1/complete`, { method: "PATCH" });
-    assert.equal((await deNovo.json()).completed, true);
+    const deNovo = await fetch(`${base}/todos/1/toggle`, { method: "PATCH" });
+    assert.equal(deNovo.status, 200);
+    assert.equal((await deNovo.json()).completed, false);
 
     const removida = await fetch(`${base}/todos/1`, { method: "DELETE" });
     assert.equal(removida.status, 200);
@@ -75,7 +82,7 @@ describe("ApiServer", () => {
   });
 
   it("responde 404 quando o PATCH não acha a tarefa", async () => {
-    const resposta = await fetch(`${base}/todos/99/complete`, { method: "PATCH" });
+    const resposta = await fetch(`${base}/todos/99/toggle`, { method: "PATCH" });
     assert.equal(resposta.status, 404);
   });
 });

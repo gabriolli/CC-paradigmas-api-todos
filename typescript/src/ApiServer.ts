@@ -2,8 +2,9 @@ import { createServer, type IncomingMessage, type Server, type ServerResponse } 
 
 import { InvalidTitleException } from "./InvalidTitleException.js";
 import type { ManipuladorHttp, ParametrosRota } from "./ManipuladorHttp.js";
-import { ManipuladorConcluirTodo } from "./manipuladores/ManipuladorConcluirTodo.js";
+import { ManipuladorAlternarTodo } from "./manipuladores/ManipuladorAlternarTodo.js";
 import { ManipuladorCriarTodo } from "./manipuladores/ManipuladorCriarTodo.js";
+import { ManipuladorHealth } from "./manipuladores/ManipuladorHealth.js";
 import { ManipuladorListarTodos } from "./manipuladores/ManipuladorListarTodos.js";
 import { ManipuladorRemoverTodo } from "./manipuladores/ManipuladorRemoverTodo.js";
 import { RespostaHttp } from "./RespostaHttp.js";
@@ -15,9 +16,10 @@ export class ApiServer {
   private servidor: Server | null = null;
 
   constructor(servico: TodoService) {
+    this.registrar(new ManipuladorHealth());
     this.registrar(new ManipuladorListarTodos(servico));
     this.registrar(new ManipuladorCriarTodo(servico));
-    this.registrar(new ManipuladorConcluirTodo(servico));
+    this.registrar(new ManipuladorAlternarTodo(servico));
     this.registrar(new ManipuladorRemoverTodo(servico));
   }
 

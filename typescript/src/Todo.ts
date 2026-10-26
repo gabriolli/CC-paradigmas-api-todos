@@ -22,8 +22,22 @@ export class Todo {
     this.completed = false;
   }
 
+  /** Recria uma tarefa já salva, com o estado `completed` que ela tinha. */
+  static fromJSON(dados: TodoJson): Todo {
+    const todo = new Todo(dados.id, dados.title);
+    if (dados.completed) {
+      todo.complete();
+    }
+    return todo;
+  }
+
   complete(): void {
     this.completed = true;
+  }
+
+  /** Inverte o estado: concluída vira pendente e vice-versa. */
+  toggle(): void {
+    this.completed = !this.completed;
   }
 
   getId(): number {

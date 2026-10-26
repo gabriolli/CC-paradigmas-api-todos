@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "title": "API em TypeScript rodando.",
+    "completed": true
+  },
+  {
+    "id": 2,
+    "title": "Criar a API com classes e TypeScript",
+    "completed": true
+  },
+  {
+    "id": 3,
+    "title": "Publicar a API finalizada.",
+    "completed": false
+  }
+]

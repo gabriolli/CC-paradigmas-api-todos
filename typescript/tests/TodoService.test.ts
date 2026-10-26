@@ -17,14 +17,22 @@ describe("TodoService", () => {
     assert.equal(servico.list().length, 2);
   });
 
-  it("localiza a tarefa e chama complete() no objeto", () => {
+  it("localiza a tarefa e chama toggle() no objeto", () => {
     const servico = new TodoService();
     servico.create("Preparar apresentação");
 
-    const concluida = servico.complete(1);
-
+    const concluida = servico.toggle(1);
     assert.equal(concluida.toJSON().completed, true);
     assert.equal(servico.findById(1).toJSON().completed, true);
+
+    servico.toggle(1);
+    assert.equal(servico.findById(1).toJSON().completed, false);
+  });
+
+  it("toggle de id inexistente lança TodoNotFoundException", () => {
+    const servico = new TodoService();
+
+    assert.throws(() => servico.toggle(99), TodoNotFoundException);
   });
 
   it("remove a tarefa e a segunda remoção não encontra o id", () => {

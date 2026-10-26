@@ -24,6 +24,16 @@ describe("Todo", () => {
     assert.equal(todo.toJSON().completed, true);
   });
 
+  it("toggle() inverte o estado a cada chamada", () => {
+    const todo = new Todo(1, "Preparar apresentação");
+
+    todo.toggle();
+    assert.equal(todo.toJSON().completed, true);
+
+    todo.toggle();
+    assert.equal(todo.toJSON().completed, false);
+  });
+
   it("recusa título vazio", () => {
     assert.throws(() => new Todo(1, "   "), InvalidTitleException);
   });
