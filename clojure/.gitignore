@@ -1,0 +1,17 @@
+# Build
+/target/
+/classes/
+/checkouts/
+.lein-*
+.nrepl-port
+.cpcache/
+
+# IDE / OS
+.idea/
+.vscode/
+.calva/
+.clj-kondo/.cache/
+.lsp/
+*.swp
+.DS_Store
+Thumbs.db
