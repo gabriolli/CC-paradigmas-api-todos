@@ -28,12 +28,14 @@ Esta é a API construída para demonstrar a aplicação prática do **paradigma 
 
 ---
 
+> As APIs em Clojure e TypeScript deste repositório também usam a porta 5000 e expõem os mesmos endpoints. Suba só uma por vez, ou mude `PORT`.
+
 ## Endpoints Disponíveis
 
 ### `GET /health`
 - **Descrição:** Endpoint de checagem do servidor e verificação de leitura do banco de dados (JSON).
 - **Status de Sucesso:** `200 OK`
-- **Exemplo de Resposta:** `{ "status": "ok", "paradigm": "100% imperativo explícito" }`
+- **Exemplo de Resposta:** `{ "status": "ok", "paradigm": "imperativo" }`
 
 ### `GET /todos`
 - **Descrição:** Lista todas as tarefas do banco de dados local.
